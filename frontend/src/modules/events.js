@@ -9,10 +9,7 @@ const REMOVEDEFAULT = 'events/REMOVEDEFAULT';
 const CLEAREVENTS ='events/CLEAREVENTS';
 
 export const initiateEvents =createRequestThunk(INITIATE, getEvents);
-// export const insert = createAction(INSERT, event=>({
-//     ...event,
-//     id: id++,
-// }));
+
 export const insert = (event) => async dispatch => {
   try{
     const response = await postEvents({...event,id:id++})
@@ -25,9 +22,8 @@ export const insert = (event) => async dispatch => {
     throw error;
   }
 }
-// export const remove = createAction(REMOVE,id=>id);
-export const remove = createRequestThunk(REMOVE, deleteEvents)
-// export const removeDefault = createAction(REMOVEDEFAULT, removeEvent=>removeEvent);
+
+export const remove = createRequestThunk(REMOVE, deleteEvents);
 export const removeDefault = (removeEvent) => async dispatch => {
   try{
     await removeEvents(removeEvent)
@@ -40,7 +36,7 @@ export const removeDefault = (removeEvent) => async dispatch => {
     throw error;
   }
 }
-// export const clearEvents = createAction(CLEAREVENTS, clearEvent=>clearEvent);
+
 export const clearEvents = (clearEvent) => async dispatch =>{
   try{
     await clearAllEvents(clearEvent)

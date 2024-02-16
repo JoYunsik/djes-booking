@@ -10,5 +10,3 @@ const CurrentDate= ({ currYear, currMonth,defaultsetting}) =>{
 }
 
 export default CurrentDate;
-
-// {currYear}년 {currMonth+1}월

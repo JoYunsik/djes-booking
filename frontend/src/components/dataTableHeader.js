@@ -1,5 +1,4 @@
 import { Button } from "antd";
-// import './dataTableHeader.css'
 
 const DataTableHeader = ({selectedId,eventRemove}) =>{
     const handleOnClick =() =>{

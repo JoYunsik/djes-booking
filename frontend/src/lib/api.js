@@ -1,6 +1,6 @@
 import Axios from 'axios';
 
-const url = 'http://localhost:8000'
+const url = process.env.REACT_APP_API_HOST
 export const getEvents = ()=>{
     return Axios.get(`${url}/events/`);
 };

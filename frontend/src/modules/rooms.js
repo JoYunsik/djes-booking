@@ -25,7 +25,6 @@ export const remove = createRequestThunk(REMOVE, deleteRooms);
 export const select = createAction(SELECT, id=>id);
 export const initiateRooms = createRequestThunk(INITIATE, getRooms);
 
-// {id : 1, max : 2, room:'한마음관'}, {id : 2, max:1, room:'4층강당'}
 const initialState = {currRoom:1, rooms:[{id:1, max:1, room:'..laoding'}]}
 
 const rooms = handleActions({
