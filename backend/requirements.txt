@@ -1,3 +1,1 @@
-django~=4.2.9
-djangorestframework~=3.14.0
-django-cors-headers
+-r requirements/prod.txt
