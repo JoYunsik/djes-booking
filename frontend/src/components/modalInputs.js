@@ -47,8 +47,8 @@ const ModalInputs = ({
                         <label style={{fontSize:'1rem'}}>전담</label>
                         </div>
                         <div className="add-event-input">
-                        <input type="text" placeholder="특수" value={kindergardenText} className="kindergarden" onChange={onChangeKindergardenText} />
-                        <label style={{fontSize:'1rem'}}>반</label>
+                        <input type="text" placeholder="늘봄" value={kindergardenText} className="kindergarden" onChange={onChangeKindergardenText} />
+                        <label style={{fontSize:'1rem'}}>늘봄</label>
                     </div>
                     </div>
                 </div>
