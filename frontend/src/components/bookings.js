@@ -300,8 +300,8 @@ const Bookings = ({defaultsetting})=>{
       setKindergardenText('');
     };
     const onChangeKindergardenText = (e)=>{
-      if (e.target.value.length > 3) {
-        e.target.value = e.target.value.slice(0, 3);
+      if (e.target.value.length > 5) {
+        e.target.value = e.target.value.slice(0, 5);
         setKindergardenText(e.target.value);
       }
       else{
@@ -312,8 +312,8 @@ const Bookings = ({defaultsetting})=>{
       setExclusiveText('');
     };
     const onChangeExclusiveText = (e)=>{
-      if (e.target.value.length > 3) {
-        e.target.value = e.target.value.slice(0, 3);
+      if (e.target.value.length > 5) {
+        e.target.value = e.target.value.slice(0, 5);
         setExclusiveText(e.target.value);
       }
       else{
@@ -333,6 +333,7 @@ const Bookings = ({defaultsetting})=>{
               <DateBox id='3' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
               <DateBox id='4' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
               <DateBox id='5' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
+              <DateBox id='6' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
             </div>
           ))}
           <ModalInputs

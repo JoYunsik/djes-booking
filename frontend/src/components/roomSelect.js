@@ -16,10 +16,10 @@ const RoomSelect = ({ rooms, currRoom, select }) => {
             }}
         >
             <Select
-                defaultValue={rooms[0].id}
+                defaultValue={rooms.length > 0 ? rooms[0].id : undefined}
                 style={{
-                    width: 140,
-                    height: 45,
+                    width: 160,
+                    height: 52,
                 }}
                 onChange={handleChange}
                 options={

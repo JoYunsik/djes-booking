@@ -152,13 +152,21 @@ const DataTable = ({events, rooms, onSetSelectedId})=>{
           onFilter: (value, record) => record.defaultevent.startsWith(value),
         },
       ];
-    // events불러와서 data 만들고 역순으로 저장  
+    // 교시를 문자열로 변환 (5교시는 2개로 분리)
+    const getTimeLabel = (time) => {
+        if (time === 4) return '5교시(12:20~13:00)';
+        if (time === 5) return '5교시(13:00~13:40)';
+        if (time === 6) return '6교시';
+        return `${time + 1}교시`;
+    };
+
+    // events불러와서 data 만들고 역순으로 저장
     const data = events.map((event)=>({
         key:event.id,
         year: event.year,
         month: event.month+1,
         date: event.date,
-        time: event.time+1,
+        time: getTimeLabel(event.time),
         event:event.event,
         room: roomNameSelect(event.room),
         defaultevent: event.defaultevent? 'O' : 'X'

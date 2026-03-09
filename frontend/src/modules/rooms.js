@@ -32,7 +32,7 @@ const rooms = handleActions({
     [REMOVE]: (state,action)=>({...state, rooms: state.rooms.filter(room=>room.id !== action.payload)}),
     [SELECT]: (state,action)=>({...state, currRoom: action.payload }),
     [INITIATE]: (state,action)=>{
-        id = action.payload[action.payload.length-1].id + 1;
+        id = action.payload.length === 0 ? 1 : action.payload[action.payload.length-1].id + 1;
         return {...state, rooms: action.payload}
     },
 }, initialState);

@@ -1,27 +1,50 @@
-import Axios from 'axios';
+import { createClient } from '@supabase/supabase-js';
 
-const url = process.env.REACT_APP_API_HOST
-export const getEvents = ()=>{
-    return Axios.get(`${url}/events/`);
+const supabase = createClient(
+    process.env.REACT_APP_SUPABASE_URL,
+    process.env.REACT_APP_SUPABASE_ANON_KEY
+);
+
+export const getEvents = async () => {
+    const { data, error } = await supabase.from('events').select('*');
+    if (error) throw error;
+    return { data };
 };
-export const postEvents = (event)=>{
-    return Axios.post(`${url}/events/`, event);
+export const postEvents = async (event) => {
+    const { data, error } = await supabase.from('events').insert(event).select().single();
+    if (error) throw error;
+    return { data };
 };
-export const deleteEvents = (id)=>{
-    return Axios.delete(`${url}/events/${id}/`)
+export const deleteEvents = async (id) => {
+    const { error } = await supabase.from('events').delete().eq('id', id);
+    if (error) throw error;
+    return { data: id };
 };
-export const removeEvents = (removeEvent)=>{
-    return Axios.delete(`${url}/events/remove_default/`,{data:removeEvent})
+export const removeEvents = async ({ date, year, month, time, room, event, defaultevent }) => {
+    const { error } = await supabase.from('events').delete()
+        .eq('date', date).eq('year', year).eq('month', month)
+        .eq('time', time).eq('room', room).eq('event', event)
+        .eq('defaultevent', defaultevent);
+    if (error) throw error;
 };
-export const clearAllEvents = (clearEvent)=>{
-    return Axios.delete(`${url}/events/clear_events/`,{data:clearEvent})
+export const clearAllEvents = async ({ date, year, month, time, room }) => {
+    const { error } = await supabase.from('events').delete()
+        .eq('date', date).eq('year', year).eq('month', month)
+        .eq('time', time).eq('room', room).eq('defaultevent', false);
+    if (error) throw error;
 };
-export const getRooms = ()=>{
-    return Axios.get(`${url}/rooms/`);
+export const getRooms = async () => {
+    const { data, error } = await supabase.from('rooms').select('*');
+    if (error) throw error;
+    return { data };
 };
-export const postRooms = (room,max,id)=>{
-    return Axios.post(`${url}/rooms/`,{id, max, room});
+export const postRooms = async (room, max, id) => {
+    const { data, error } = await supabase.from('rooms').insert({ id, max, room }).select().single();
+    if (error) throw error;
+    return { data };
 };
-export const deleteRooms = (id)=>{
-    return Axios.delete(`${url}/rooms/${id}/`)
+export const deleteRooms = async (id) => {
+    const { error } = await supabase.from('rooms').delete().eq('id', id);
+    if (error) throw error;
+    return { data: id };
 };

@@ -9,6 +9,7 @@ const TimesRight = ()=> {
           <div className="time"></div>
           <div className="time"></div>
           <div className="time"></div>
+          <div className="time"></div>
         </div>
     )
 }

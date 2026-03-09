@@ -1,15 +1,28 @@
-.times-left{ 
-    margin-left: 75px;
+.times-left{
+    margin-left: 98px;
 }
 .time{
-    margin-bottom: 5px;
-    font-size: 17px;
+    margin-bottom: 7px;
+    font-size: 22px;
     font-weight: 600;
-    width:68px;
-    height: 70px;
+    width:88px;
+    height: 91px;
     background-color:rgb(238, 238, 238);
     text-align: center;
     border-radius: 10px;
-    line-height:70px; 
+    line-height:91px;
     border:1px solid rgb(238, 238, 238);
+  }
+.time-with-label {
+    line-height: normal;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 7px 2px;
+  }
+.time-sub {
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 3px;
   }

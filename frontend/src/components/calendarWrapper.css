@@ -1,4 +1,4 @@
-.calendar-wrapper{ 
+.calendar-wrapper{
     display:flex;
     justify-content:space-between;
     align-items: center;
@@ -11,15 +11,15 @@
     text-align: center;
 }
 .icon{
-    height: 3rem;
-    width: 38px;
-    margin: 0 5px;
-    padding:25px 0px;
+    height: 3.9rem;
+    width: 49px;
+    margin: 0 7px;
+    padding:33px 0px;
     cursor: pointer;
     color: #878787;
     text-align: center;
-    line-height: 38px;
-    font-size: 1.9rem;
+    line-height: 49px;
+    font-size: 2.5rem;
     user-select: none;
     border-radius: 10px;
     background-color: #ffffff;

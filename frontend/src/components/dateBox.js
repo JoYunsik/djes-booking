@@ -19,7 +19,7 @@ const DateBox =({onBoxClick,onDeleteClick,id,weekdata,events,currRoom,defaultset
             )
             return (                
                 <div key={idx} className={event.defaultevent? "event default":"event"}>
-                    <div className="event-title">{event.event}</div>
+                    <div className={`event-title${event.event.length >= 5 ? ' long' : ''}`}>{event.event}</div>
                     <Popconfirm
                         title="삭제하시겠습니까?"
                         okText="네"
@@ -41,7 +41,7 @@ const DateBox =({onBoxClick,onDeleteClick,id,weekdata,events,currRoom,defaultset
             )
             return (                
                 <div key={idx} className={event.defaultevent? "event default":"event"}>
-                    <div className="event-title">{event.event}</div>
+                    <div className={`event-title${event.event.length >= 5 ? ' long' : ''}`}>{event.event}</div>
                     <Popconfirm
                         title="삭제하시겠습니까?"
                         okText="네"

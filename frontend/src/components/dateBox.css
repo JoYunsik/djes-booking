@@ -10,14 +10,18 @@ padding: 0px 0px 0.5px 0px;
 }
 .event .event-title{
 color:white;
-font-size:1.1rem;
+font-size:1.43rem;
 font-weight:600;
 flex-grow:3;
 text-align: center;
-
+white-space: nowrap;
+}
+.event .event-title.long{
+font-size:1rem;
+padding: 4px 0;
 }
 .event .close-icon{
-font-size:1rem;
+font-size:1.3rem;
 text-align: center;
 color:yellow;
 margin-right:2px;

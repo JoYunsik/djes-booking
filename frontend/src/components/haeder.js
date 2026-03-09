@@ -104,7 +104,7 @@ const Header = ({defaultsetting}) => {
                     },
                 }}
             >
-                <Button  disabled={disabled} size="large" onClick={onClick}>
+                <Button disabled={disabled} style={{height:'52px', fontSize:'1.1rem', fontWeight:600}} onClick={onClick}>
                     Today
                 </Button>
             </ConfigProvider>
