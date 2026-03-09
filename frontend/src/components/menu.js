@@ -45,7 +45,7 @@ const Menubar = ({setDefaultsetting})=>{
       }else if (page ==='/settings/datatable/'){
         setColor(red);
       }
-    },[location,color,setColor])
+    },[location,color,setColor,setDefaultsetting])
     const onClick = (e) => {
         if(e.key==='1'){
           navigate('/');

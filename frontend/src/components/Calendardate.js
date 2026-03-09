@@ -52,7 +52,7 @@ const CalendarDate = ({currDate,currYear,currMonth,currDay,currRoom}) =>{
         }
         newweekdata.slice(1,6).map(data=>weekdatainsert(data));
         setDates(newdates);
-    }, [currDate, currYear, currMonth, currDay, currRoom, weekdatainsert])
+    }, [currDate, currYear, currMonth, currDay, currRoom, weekdatainsert, lastDateofMonth, lastDateofLastMonth])
     return(
         <ul className='days'> 
             {dates}

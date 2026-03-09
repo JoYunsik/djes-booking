@@ -17,7 +17,7 @@ const DateBox =({onBoxClick,onDeleteClick,id,weekdata,events,currRoom,defaultset
                 event.time === parseInt(id)&&
                 event.defaultevent === true
             )
-            return (                
+            return (
                 <div key={idx} className={event.defaultevent? "event default":"event"}>
                     <div className={`event-title${event.event.length >= 5 ? ' long' : ''}`}>{event.event}</div>
                     <Popconfirm
@@ -30,7 +30,7 @@ const DateBox =({onBoxClick,onDeleteClick,id,weekdata,events,currRoom,defaultset
                         <CloseOutlined className="close-icon" onClick={(e)=>e.stopPropagation()}/>
                     </Popconfirm>
                 </div>
-            )
+            ) || null
         }) : events.map((event,idx)=>{
             if(
                 event.date === weekdata.date &&
@@ -39,7 +39,7 @@ const DateBox =({onBoxClick,onDeleteClick,id,weekdata,events,currRoom,defaultset
                 event.room === weekdata.currRoom &&
                 event.time === parseInt(id)
             )
-            return (                
+            return (
                 <div key={idx} className={event.defaultevent? "event default":"event"}>
                     <div className={`event-title${event.event.length >= 5 ? ' long' : ''}`}>{event.event}</div>
                     <Popconfirm
@@ -52,7 +52,7 @@ const DateBox =({onBoxClick,onDeleteClick,id,weekdata,events,currRoom,defaultset
                         <CloseOutlined className="close-icon" onClick={(e)=>e.stopPropagation()}/>
                     </Popconfirm>
                 </div>
-            )
+            ) || null
         })
         setEventChildren(newEventchildren);
     },[weekdata,events,id,currRoom,defaultsetting,onDeleteClick])
