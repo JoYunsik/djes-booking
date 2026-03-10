@@ -99,7 +99,8 @@ const DataTable = ({events, rooms, onSetSelectedId})=>{
     
     // room id를 room name으로 변환
     const roomNameSelect = (roomId)=>{
-        return rooms.filter((room)=>room.id === roomId)[0].room;
+        const found = rooms.find((room)=>room.id === roomId);
+        return found ? found.room : roomId;
     }
     
     const columns = [
