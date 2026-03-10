@@ -17,7 +17,7 @@ export const postEvents = async (event) => {
     return { data };
 };
 export const deleteEvents = async (id) => {
-    const { error } = await supabase.from('events').delete().eq('id', id);
+    const { error } = await supabase.from('events').delete().eq('id', Number(id));
     if (error) throw error;
     return { data: id };
 };

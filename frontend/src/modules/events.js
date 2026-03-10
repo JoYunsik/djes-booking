@@ -57,7 +57,7 @@ const events = handleActions({
       return action.payload
     },
     [INSERT]: (state,action)=>(state.concat(action.payload)),
-    [REMOVE]: (state,action)=>(state.filter(event=> event.id !== action.payload)),
+    [REMOVE]: (state,action)=>(state.filter(event=> event.id !== Number(action.payload))),
     [REMOVEDEFAULT]: (state,action)=>(state.filter(event=>
             event.date !== action.payload.date ||
             event.month !== action.payload.month ||
