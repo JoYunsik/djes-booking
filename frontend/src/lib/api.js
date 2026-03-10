@@ -11,7 +11,8 @@ export const getEvents = async () => {
     return { data };
 };
 export const postEvents = async (event) => {
-    const { data, error } = await supabase.from('events').insert(event).select().single();
+    const { id, ...eventWithoutId } = event;
+    const { data, error } = await supabase.from('events').insert(eventWithoutId).select().single();
     if (error) throw error;
     return { data };
 };
