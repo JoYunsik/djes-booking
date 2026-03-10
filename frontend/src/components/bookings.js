@@ -300,8 +300,8 @@ const Bookings = ({defaultsetting})=>{
       setKindergardenText('');
     };
     const onChangeKindergardenText = (e)=>{
-      if (e.target.value.length > 5) {
-        e.target.value = e.target.value.slice(0, 5);
+      if (e.target.value.length > 6) {
+        e.target.value = e.target.value.slice(0, 6);
         setKindergardenText(e.target.value);
       }
       else{
@@ -312,8 +312,8 @@ const Bookings = ({defaultsetting})=>{
       setExclusiveText('');
     };
     const onChangeExclusiveText = (e)=>{
-      if (e.target.value.length > 5) {
-        e.target.value = e.target.value.slice(0, 5);
+      if (e.target.value.length > 6) {
+        e.target.value = e.target.value.slice(0, 6);
         setExclusiveText(e.target.value);
       }
       else{
