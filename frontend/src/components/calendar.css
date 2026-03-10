@@ -19,7 +19,7 @@
 .calendar .weeks li{
     color: #333;
     width: calc(100% / 7);
-    font-size:1.43rem;
+    font-size:1.1rem;
     font-weight: 500;
     cursor: default;
     opacity: 0.7;
@@ -31,5 +31,5 @@
     z-index: 1;
     position: relative;
     margin-top: 26px;
-    font-size: 30px;
+    font-size: 23px;
 }

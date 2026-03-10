@@ -11,15 +11,15 @@ const RoomSelect = ({ rooms, currRoom, select }) => {
                     colorPrimary: '#00b96b',
                     borderRadius: 4,
                     colorBgContainer: '#FCFEFC',
-                    fontSize: 24,        
+                    fontSize: 16,
                 },
             }}
         >
             <Select
                 defaultValue={rooms.length > 0 ? rooms[0].id : undefined}
                 style={{
-                    width: 160,
-                    height: 52,
+                    width: 120,
+                    height: 40,
                 }}
                 onChange={handleChange}
                 options={
