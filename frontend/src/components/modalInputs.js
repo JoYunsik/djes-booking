@@ -25,7 +25,7 @@ const ModalInputs = ({
             title={title}
             open={open}
             onOk={handleOk}
-            confirmLoading={false}
+            confirmLoading={confirmLoading}
             onCancel={handleCancel}
             className='modal'
         >
