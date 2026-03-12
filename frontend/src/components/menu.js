@@ -50,7 +50,7 @@ const Menubar = ({setDefaultsetting})=>{
         if(e.key==='1'){
           navigate('/');
         } else if(e.key==='2'){
-          navigate('set-default/');
+          navigate('/set-default/');
         }else if(e.key==='3'){
           navigate('settings/rooms/');
         } else if(e.key==='4'){
