@@ -1,18 +1,17 @@
 import { Modal } from "antd";
 
 const ModalInputs = ({
-    open, 
+    open,
     handleOk,
-    confirmLoading,
     handleCancel,
     gradeText,
     classText,
     exclusiveText,
-    kindergardenText,
+    afterschoolText,
     onChangeGradeText,
     onChangeClassText,
     onChangeExclusiveText,
-    onChangeKindergardenText,
+    onChangeAfterschoolText,
     eventSample,
     rooms,
 }) => {
@@ -25,7 +24,6 @@ const ModalInputs = ({
             title={title}
             open={open}
             onOk={handleOk}
-            confirmLoading={confirmLoading}
             onCancel={handleCancel}
             className='modal'
         >
@@ -47,7 +45,7 @@ const ModalInputs = ({
                         <label style={{fontSize:'1rem'}}>전담</label>
                         </div>
                         <div className="add-event-input">
-                        <input type="text" placeholder="늘봄" value={kindergardenText} className="kindergarden" onChange={onChangeKindergardenText} />
+                        <input type="text" placeholder="늘봄" value={afterschoolText} className="afterschool" onChange={onChangeAfterschoolText} />
                         <label style={{fontSize:'1rem'}}>늘봄</label>
                     </div>
                     </div>

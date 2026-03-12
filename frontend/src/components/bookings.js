@@ -11,8 +11,8 @@ const Bookings = ({defaultsetting})=>{
 
     const {currDate, currYear, currMonth, currDay} = useSelector(({dateinfo})=>({
       currDate: dateinfo.currDate,
-      currYear: dateinfo.currYear, 
-      currMonth: dateinfo.currMonth, 
+      currYear: dateinfo.currYear,
+      currMonth: dateinfo.currMonth,
       currDay: dateinfo.currDay,
     }))
     const weekdata = useSelector(({weekdata})=>weekdata);
@@ -32,11 +32,11 @@ const Bookings = ({defaultsetting})=>{
     const handleClearEventsBulk = useCallback((event)=>dispatch(clearEventsBulk(event)),[dispatch]);
     const handleRemoveDefaultBulk = useCallback((payload)=>dispatch(removeDefaultBulk(payload)),[dispatch]);
     const [open, setOpen] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [loadingKeys, setLoadingKeys] = useState(new Set());
     const [gradeText, setGradeText] = useState('');
     const [classText, setClassText] = useState('');
     const [exclusiveText, setExclusiveText] = useState('');
-    const [kindergardenText, setKindergardenText] = useState('');
+    const [afterschoolText, setAfterschoolText] = useState('');
     const [eventSample, setEventSample] = useState({
       date:'',
       year:'',
@@ -44,6 +44,7 @@ const Bookings = ({defaultsetting})=>{
       time:'',
       room:1,
       event:'',
+      type:'normal',
     });
     // 방에 예약할 수 있는 max값을 가져옴.
     const getMaxRoom = ()=>{
@@ -51,12 +52,12 @@ const Bookings = ({defaultsetting})=>{
     }
     // 예약이 비었는지 check
     const fullCheck = (bookingDate,bookingYear,bookingMonth,bookingIndex,currRoom) =>{
-      const eventCheck = events.filter(event => 
+      const eventCheck = events.filter(event =>
         event.date === bookingDate &&
         event.year === bookingYear &&
         event.month === bookingMonth &&
         event.time === bookingIndex &&
-        event.room === currRoom 
+        event.room === currRoom
       );
       return getMaxRoom() > eventCheck.length;
     }
@@ -121,7 +122,7 @@ const Bookings = ({defaultsetting})=>{
         console.log('fail');
         openFullNotification();
       }
-      
+
     };
     // 삭제 버튼을 클릭
     const onDeleteClick = async (e,event,defaultsetting)=>{
@@ -174,28 +175,10 @@ const Bookings = ({defaultsetting})=>{
       setGradeText('');
       setClassText('');
       setExclusiveText('');
-      setKindergardenText('');
+      setAfterschoolText('');
     }
-    // 전체화면 오버레이 토글
-    const setCover = (on) => {
-      const id = 'global-cover-overlay';
-      if(on) {
-        if(document.getElementById(id)) return;
-        const div = document.createElement('div');
-        div.id = id;
-        div.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#373c4f6a;z-index:1001;';
-        document.body.appendChild(div);
-      } else {
-        const div = document.getElementById(id);
-        if(div) document.body.removeChild(div);
-      }
-    };
-
     // 이벤트 추가 과정 함수
     const addEventProcess = async (newEvent, defaultsetting)=>{
-      setConfirmLoading(true);
-      if(defaultsetting) setCover(true);
-
       if(!defaultsetting){
         await eventInsert(newEvent);
       } else if(defaultsetting){
@@ -206,39 +189,32 @@ const Bookings = ({defaultsetting})=>{
         const room = newEvent.room;
         const event = newEvent.event;
         const time = newEvent.time;
+        const type = newEvent.type;
 
-        // 등록할 전담 데이터를 배열로 생성 (원래 로직과 동일)
+        // 등록할 전담 데이터를 배열로 생성
         const bulkEvents = [];
         while(year === currYear){
-          bulkEvents.push({ date, year, month, time, room, event, defaultevent: true });
+          bulkEvents.push({ date, year, month, time, room, event, defaultevent: true, type });
           const next = new Date(year, month, date + 7);
           year = next.getFullYear();
           month = next.getMonth();
           date = next.getDate();
         }
-        console.log('bulkEvents count:', bulkEvents.length);
 
         // 해당 날짜들의 일반예약만 한 번에 삭제
         const dates = bulkEvents.map(e => ({ date: e.date, month: e.month, year: e.year }));
-        console.log('calling handleClearEventsBulk...');
+        const key = `${time}-${room}-${newEvent.date}-${newEvent.month}-${newEvent.year}`;
+        setLoadingKeys(prev => new Set(prev).add(key));
         await handleClearEventsBulk({ time, room, dates });
 
         // 한 번에 bulk insert
-        console.log('calling handleInsertBulk...');
         await handleInsertBulk(bulkEvents);
-        console.log('handleInsertBulk done');
+        setLoadingKeys(prev => { const next = new Set(prev); next.delete(key); return next; });
       }
-
-      resetInputs();
-      notification.destroy();
-      setCover(false);
-      setConfirmLoading(false);
-      setOpen(false);
     }
     // 모달 ok버튼 눌렀을때
     const handleOk = () => {
-      console.log('handleOk called, defaultsetting:', defaultsetting);
-      if(gradeText==="" && classText==="" && exclusiveText==="" && kindergardenText==="" ){
+      if(gradeText==="" && classText==="" && exclusiveText==="" && afterschoolText==="" ){
         openInputNotification('예약할 내용')
         return;
       }
@@ -254,27 +230,29 @@ const Bookings = ({defaultsetting})=>{
         const newEvent = {
           ...eventSample,
           event: `${gradeText}-${classText}`,
+          type: 'normal',
         };
-        console.log('calling addEventProcess with grade-class, defaultsetting:', defaultsetting);
         addEventProcess(newEvent,defaultsetting);
       }
       else if(exclusiveText!==""){
         const newEvent = {
           ...eventSample,
           event: exclusiveText,
+          type: 'normal',
         };
         addEventProcess(newEvent,defaultsetting);
       }
-      else if(kindergardenText!==""){
+      else if(afterschoolText!==""){
         const newEvent = {
           ...eventSample,
-          event: kindergardenText,
+          event: afterschoolText,
+          type: 'afterschool',
         };
         addEventProcess(newEvent,defaultsetting);
       }
-      else {
-        console.log('fail');
-      }
+      resetInputs();
+      notification.destroy();
+      setOpen(false);
     };
     // 모달 닫았을때
     const handleCancel = () => {
@@ -292,7 +270,7 @@ const Bookings = ({defaultsetting})=>{
         setGradeText(e.target.value);
       }
       setExclusiveText('');
-      setKindergardenText('');
+      setAfterschoolText('');
     };
     const onChangeClassText = (e) =>{
       if (e.target.value.length > 1) {
@@ -303,15 +281,15 @@ const Bookings = ({defaultsetting})=>{
         setClassText(e.target.value);
       }
       setExclusiveText('');
-      setKindergardenText('');
+      setAfterschoolText('');
     };
-    const onChangeKindergardenText = (e)=>{
+    const onChangeAfterschoolText = (e)=>{
       if (e.target.value.length > 6) {
         e.target.value = e.target.value.slice(0, 6);
-        setKindergardenText(e.target.value);
+        setAfterschoolText(e.target.value);
       }
       else{
-        setKindergardenText(e.target.value);
+        setAfterschoolText(e.target.value);
       }
       setGradeText('');
       setClassText('');
@@ -327,34 +305,33 @@ const Bookings = ({defaultsetting})=>{
       }
       setGradeText('');
       setClassText('');
-      setKindergardenText('');
+      setAfterschoolText('');
     };
     return(
         <div className="bookings">
           {weekdata.map((data, idx) => (
             <div className={`day-wrapper ${idx}`} key={idx}>
-              <DateBox id='0' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
-              <DateBox id='1' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
-              <DateBox id='2' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
-              <DateBox id='3' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
-              <DateBox id='4' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
-              <DateBox id='5' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
-              <DateBox id='6' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick}weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting}></DateBox>
+              <DateBox id='0' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='1' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='2' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='3' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='4' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='5' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='6' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
             </div>
           ))}
           <ModalInputs
             open={open}
             handleOk={handleOk}
-            confirmLoading={confirmLoading}
             handleCancel={handleCancel}
             gradeText={gradeText}
             classText={classText}
             exclusiveText={exclusiveText}
-            kindergardenText={kindergardenText}
+            afterschoolText={afterschoolText}
             onChangeGradeText={onChangeGradeText}
             onChangeClassText={onChangeClassText}
             onChangeExclusiveText={onChangeExclusiveText}
-            onChangeKindergardenText={onChangeKindergardenText}
+            onChangeAfterschoolText={onChangeAfterschoolText}
             eventSample={eventSample}
             rooms={rooms}
           />

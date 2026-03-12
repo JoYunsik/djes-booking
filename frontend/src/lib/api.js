@@ -6,9 +6,17 @@ const supabase = createClient(
 );
 
 export const getEvents = async () => {
-    const { data, error } = await supabase.from('events').select('*');
-    if (error) throw error;
-    return { data };
+    const pageSize = 1000;
+    let from = 0;
+    let allData = [];
+    while (true) {
+        const { data, error } = await supabase.from('events').select('*').range(from, from + pageSize - 1);
+        if (error) throw error;
+        allData = allData.concat(data);
+        if (data.length < pageSize) break;
+        from += pageSize;
+    }
+    return { data: allData };
 };
 export const postEvents = async (event) => {
     const { id, ...eventWithoutId } = event;
@@ -38,7 +46,6 @@ export const postEventsBulk = async (events) => {
     const eventsWithoutId = events.map(({ id, ...e }) => e);
     const { data, error } = await supabase.from('events').insert(eventsWithoutId).select();
     if (error) throw error;
-    console.log('postEventsBulk response:', data);
     return { data };
 };
 export const removeEventsBulk = async ({ time, room, event, dates }) => {
