@@ -183,6 +183,7 @@ const Bookings = ({defaultsetting})=>{
       resetInputs();
       notification.destroy();
       setOpen(false);
+      setConfirmLoading(false);
 
       if(!defaultsetting){
         eventInsert(newEvent);
