@@ -34,6 +34,17 @@ export const clearAllEvents = async ({ date, year, month, time, room }) => {
         .eq('time', time).eq('room', room).eq('defaultevent', false);
     if (error) throw error;
 };
+export const postEventsBulk = async (events) => {
+    const eventsWithoutId = events.map(({ id, ...e }) => e);
+    const { data, error } = await supabase.from('events').insert(eventsWithoutId).select();
+    if (error) throw error;
+    return { data };
+};
+export const clearAllEventsBulk = async ({ time, room, year }) => {
+    const { error } = await supabase.from('events').delete()
+        .eq('time', time).eq('room', room).eq('year', year).eq('defaultevent', false);
+    if (error) throw error;
+};
 export const getRooms = async () => {
     const { data, error } = await supabase.from('rooms').select('*');
     if (error) throw error;

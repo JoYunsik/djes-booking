@@ -2,7 +2,7 @@ import './bookings.css'
 import React, { useCallback, useState } from 'react';
 import { notification } from 'antd';
 import { useDispatch, useSelector} from 'react-redux';
-import {insert,remove,removeDefault,clearEvents} from "../modules/events";
+import {insert,remove,removeDefault,clearEvents,insertBulk,clearEventsBulk} from "../modules/events";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import DateBox from './dateBox';
 import ModalInputs from './modalInputs';
@@ -28,6 +28,8 @@ const Bookings = ({defaultsetting})=>{
     const eventRemove = useCallback((id)=>dispatch(remove(id)),[dispatch]);
     const eventRemoveDefault = useCallback((event)=>dispatch(removeDefault(event)),[dispatch]);
     const handleClearEvents = useCallback((event)=>dispatch(clearEvents(event)),[dispatch]);
+    const handleInsertBulk = useCallback((eventsArr)=>dispatch(insertBulk(eventsArr)),[dispatch]);
+    const handleClearEventsBulk = useCallback((event)=>dispatch(clearEventsBulk(event)),[dispatch]);
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [gradeText, setGradeText] = useState('');
@@ -201,41 +203,30 @@ const Bookings = ({defaultsetting})=>{
       if(!defaultsetting){
         await eventInsert(newEvent);
       } else if(defaultsetting){
-        const currYear = newEvent.year
+        const currYear = newEvent.year;
         let date = newEvent.date;
         let year = newEvent.year;
         let month = newEvent.month;
-        let room = newEvent.room;
-        let event = newEvent.event;
-        let time = newEvent.time;
+        const room = newEvent.room;
+        const event = newEvent.event;
+        const time = newEvent.time;
 
-        await handleClearEvents({date,year,month,time,room});
-        await eventInsert(newEvent);
-        while(year===currYear){
-          date+=7;
-          let tmpYear = new Date(year,month,date).getFullYear();
-          let tmpMonth = new Date(year, month,date).getMonth();
-          let tmpDate = new Date(year,month,date).getDate();
-          await handleClearEvents({
-            date:tmpDate,
-            year:tmpYear,
-            month:tmpMonth,
-            time:time,
-            room:room,
-          });
-          await eventInsert({
-            date:tmpDate,
-            year:tmpYear,
-            month:tmpMonth,
-            time:time,
-            room:room,
-            event: event,
-            defaultevent:true
-          });
-          year=tmpYear;
-          month=tmpMonth;
-          date=tmpDate;
+        // 해당 연도의 같은 요일/교시/강의실 일반예약 전부 한 번에 삭제
+        await handleClearEventsBulk({ time, room, year: currYear });
+
+        // 등록할 전담 데이터를 배열로 생성 (원래 로직과 동일)
+        const bulkEvents = [];
+        while(year === currYear){
+          bulkEvents.push({ date, year, month, time, room, event, defaultevent: true });
+          date += 7;
+          const next = new Date(year, month, date);
+          year = next.getFullYear();
+          month = next.getMonth();
+          date = next.getDate();
         }
+
+        // 한 번에 bulk insert
+        await handleInsertBulk(bulkEvents);
       }
 
       resetInputs();

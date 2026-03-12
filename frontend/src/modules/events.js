@@ -1,12 +1,14 @@
 import {handleActions} from 'redux-actions';
 import createRequestThunk from '../lib/createRequestThunk';
-import { getEvents,postEvents,deleteEvents,removeEvents,clearAllEvents } from '../lib/api';
+import { getEvents,postEvents,deleteEvents,removeEvents,clearAllEvents,postEventsBulk,clearAllEventsBulk } from '../lib/api';
 let id = 1;
 const INITIATE = 'events/INITIATE';
 const INSERT = 'events/INSERT';
+const INSERTBULK = 'events/INSERTBULK';
 const REMOVE = 'events/REMOVE';
 const REMOVEDEFAULT = 'events/REMOVEDEFAULT';
 const CLEAREVENTS ='events/CLEAREVENTS';
+const CLEAREVENTSBULK = 'events/CLEAREVENTSBULK';
 
 export const initiateEvents =createRequestThunk(INITIATE, getEvents);
 
@@ -50,6 +52,32 @@ export const clearEvents = (clearEvent) => async dispatch =>{
   }
 }
 
+export const insertBulk = (eventsArr) => async dispatch => {
+  try{
+    const response = await postEventsBulk(eventsArr)
+    dispatch({
+      type: INSERTBULK,
+      payload: response.data
+    })
+  } catch(error){
+    console.log(error);
+    throw error;
+  }
+}
+
+export const clearEventsBulk = (clearEvent) => async dispatch => {
+  try{
+    await clearAllEventsBulk(clearEvent)
+    dispatch({
+      type: CLEAREVENTSBULK,
+      payload: clearEvent
+    })
+  } catch(error){
+    console.log(error);
+    throw error;
+  }
+}
+
 const initialState = [];
 const events = handleActions({
     [INITIATE]: (state,action)=>{
@@ -57,6 +85,13 @@ const events = handleActions({
       return action.payload
     },
     [INSERT]: (state,action)=>(state.concat(action.payload)),
+    [INSERTBULK]: (state,action)=>(state.concat(action.payload)),
+    [CLEAREVENTSBULK]: (state,action)=>(state.filter(event=>
+            event.time !== action.payload.time ||
+            event.room !== action.payload.room ||
+            event.year !== action.payload.year ||
+            event.defaultevent !== false
+        )),
     [REMOVE]: (state,action)=>(state.filter(event=> event.id !== Number(action.payload))),
     [REMOVEDEFAULT]: (state,action)=>(state.filter(event=>
             event.date !== action.payload.date ||
