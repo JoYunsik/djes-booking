@@ -178,9 +178,16 @@ const Bookings = ({defaultsetting})=>{
       setExclusiveText('');
       setKindergardenText('');
     }
+    // wrapper cover 토글
+    const setCover = (on) => {
+      const el = document.querySelector('.wrapper');
+      if(el) on ? el.classList.add('cover') : el.classList.remove('cover');
+    };
+
     // 이벤트 추가 과정 함수
     const addEventProcess = async (newEvent, defaultsetting)=>{
       setConfirmLoading(true);
+      if(defaultsetting) setCover(true);
 
       if(!defaultsetting){
         await eventInsert(newEvent);
@@ -224,6 +231,7 @@ const Bookings = ({defaultsetting})=>{
 
       resetInputs();
       notification.destroy();
+      setCover(false);
       setConfirmLoading(false);
       setOpen(false);
     }
