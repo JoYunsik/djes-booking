@@ -216,13 +216,17 @@ const Bookings = ({defaultsetting})=>{
           month = next.getMonth();
           date = next.getDate();
         }
+        console.log('bulkEvents count:', bulkEvents.length);
 
         // 해당 날짜들의 일반예약만 한 번에 삭제
         const dates = bulkEvents.map(e => ({ date: e.date, month: e.month, year: e.year }));
+        console.log('calling handleClearEventsBulk...');
         await handleClearEventsBulk({ time, room, dates });
 
         // 한 번에 bulk insert
+        console.log('calling handleInsertBulk...');
         await handleInsertBulk(bulkEvents);
+        console.log('handleInsertBulk done');
       }
 
       resetInputs();
