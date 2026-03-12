@@ -211,19 +211,19 @@ const Bookings = ({defaultsetting})=>{
         const event = newEvent.event;
         const time = newEvent.time;
 
-        // 해당 연도의 같은 요일/교시/강의실 일반예약 전부 한 번에 삭제
-        await handleClearEventsBulk({ time, room, year: currYear });
-
         // 등록할 전담 데이터를 배열로 생성 (원래 로직과 동일)
         const bulkEvents = [];
         while(year === currYear){
           bulkEvents.push({ date, year, month, time, room, event, defaultevent: true });
-          date += 7;
-          const next = new Date(year, month, date);
+          const next = new Date(year, month, date + 7);
           year = next.getFullYear();
           month = next.getMonth();
           date = next.getDate();
         }
+
+        // 해당 날짜들의 일반예약만 한 번에 삭제
+        const dates = bulkEvents.map(e => ({ date: e.date, month: e.month, year: e.year }));
+        await handleClearEventsBulk({ time, room, dates });
 
         // 한 번에 bulk insert
         await handleInsertBulk(bulkEvents);

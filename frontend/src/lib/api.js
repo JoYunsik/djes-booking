@@ -40,10 +40,14 @@ export const postEventsBulk = async (events) => {
     if (error) throw error;
     return { data };
 };
-export const clearAllEventsBulk = async ({ time, room, year }) => {
-    const { error } = await supabase.from('events').delete()
-        .eq('time', time).eq('room', room).eq('year', year).eq('defaultevent', false);
-    if (error) throw error;
+export const clearAllEventsBulk = async ({ time, room, dates }) => {
+    // dates: [{date, month, year}, ...] 배열로 해당 날짜들만 삭제
+    for (const { date, month, year } of dates) {
+        const { error } = await supabase.from('events').delete()
+            .eq('date', date).eq('month', month).eq('year', year)
+            .eq('time', time).eq('room', room).eq('defaultevent', false);
+        if (error) throw error;
+    }
 };
 export const getRooms = async () => {
     const { data, error } = await supabase.from('rooms').select('*');

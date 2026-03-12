@@ -86,12 +86,16 @@ const events = handleActions({
     },
     [INSERT]: (state,action)=>(state.concat(action.payload)),
     [INSERTBULK]: (state,action)=>(state.concat(action.payload)),
-    [CLEAREVENTSBULK]: (state,action)=>(state.filter(event=>
-            event.time !== action.payload.time ||
-            event.room !== action.payload.room ||
-            event.year !== action.payload.year ||
-            event.defaultevent !== false
-        )),
+    [CLEAREVENTSBULK]: (state,action)=>{
+        const { time, room, dates } = action.payload;
+        const dateSet = new Set(dates.map(d => `${d.year}-${d.month}-${d.date}`));
+        return state.filter(event =>
+            !(event.time === time &&
+              event.room === room &&
+              event.defaultevent === false &&
+              dateSet.has(`${event.year}-${event.month}-${event.date}`))
+        );
+    },
     [REMOVE]: (state,action)=>(state.filter(event=> event.id !== Number(action.payload))),
     [REMOVEDEFAULT]: (state,action)=>(state.filter(event=>
             event.date !== action.payload.date ||
