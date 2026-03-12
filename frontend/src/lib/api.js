@@ -38,6 +38,7 @@ export const postEventsBulk = async (events) => {
     const eventsWithoutId = events.map(({ id, ...e }) => e);
     const { data, error } = await supabase.from('events').insert(eventsWithoutId).select();
     if (error) throw error;
+    console.log('postEventsBulk response:', data);
     return { data };
 };
 export const removeEventsBulk = async ({ time, room, event, dates }) => {
