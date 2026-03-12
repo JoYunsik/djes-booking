@@ -2,7 +2,7 @@ import './bookings.css'
 import React, { useCallback, useState } from 'react';
 import { notification } from 'antd';
 import { useDispatch, useSelector} from 'react-redux';
-import {insert,remove,removeDefault,clearEvents,insertBulk,clearEventsBulk,removeDefaultBulk} from "../modules/events";
+import {insert,remove,insertBulk,clearEventsBulk,removeDefaultBulk} from "../modules/events";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import DateBox from './dateBox';
 import ModalInputs from './modalInputs';
@@ -26,8 +26,6 @@ const Bookings = ({defaultsetting})=>{
     const dispatch = useDispatch();
     const eventInsert = useCallback((event)=>dispatch(insert(event)),[dispatch]);
     const eventRemove = useCallback((id)=>dispatch(remove(id)),[dispatch]);
-    const eventRemoveDefault = useCallback((event)=>dispatch(removeDefault(event)),[dispatch]);
-    const handleClearEvents = useCallback((event)=>dispatch(clearEvents(event)),[dispatch]);
     const handleInsertBulk = useCallback((eventsArr)=>dispatch(insertBulk(eventsArr)),[dispatch]);
     const handleClearEventsBulk = useCallback((event)=>dispatch(clearEventsBulk(event)),[dispatch]);
     const handleRemoveDefaultBulk = useCallback((payload)=>dispatch(removeDefaultBulk(payload)),[dispatch]);
