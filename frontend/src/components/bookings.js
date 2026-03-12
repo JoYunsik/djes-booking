@@ -179,14 +179,13 @@ const Bookings = ({defaultsetting})=>{
       setKindergardenText('');
     }
     // 이벤트 추가 과정 함수
-    const addEventProcess = async (newEvent, defaultsetting)=>{
+    const addEventProcess = (newEvent, defaultsetting)=>{
+      resetInputs();
+      notification.destroy();
+      setOpen(false);
+
       if(!defaultsetting){
-        await eventInsert(newEvent);
-        resetInputs();
-        notification.destroy();
-        setConfirmLoading(true);
-        setOpen(false);
-        setConfirmLoading(false);
+        eventInsert(newEvent);
       } else if(defaultsetting){
         const currYear = newEvent.year
         let date = newEvent.date;
@@ -196,40 +195,37 @@ const Bookings = ({defaultsetting})=>{
         let event = newEvent.event;
         let time = newEvent.time;
 
-        // 순차적으로 clear → insert 처리
-        await handleClearEvents({date,year,month,time,room});
-        await eventInsert(newEvent);
-
-        while(year===currYear){
-          date+=7;
-          let tmpYear = new Date(year,month,date).getFullYear();
-          let tmpMonth = new Date(year, month,date).getMonth();
-          let tmpDate = new Date(year,month,date).getDate();
-          await handleClearEvents({
-            date:tmpDate,
-            year:tmpYear,
-            month:tmpMonth,
-            time:time,
-            room:room,
-          });
-          await eventInsert({
-            date:tmpDate,
-            year:tmpYear,
-            month:tmpMonth,
-            time:time,
-            room:room,
-            event: event,
-            defaultevent:true
-          });
-          year=tmpYear;
-          month=tmpMonth;
-          date=tmpDate;
-        }
-        resetInputs();
-        notification.destroy();
-        setConfirmLoading(true);
-        setOpen(false);
-        setConfirmLoading(false);
+        // 순차적으로 clear → insert 처리 (백그라운드)
+        const runSequential = async () => {
+          await handleClearEvents({date,year,month,time,room});
+          await eventInsert(newEvent);
+          while(year===currYear){
+            date+=7;
+            let tmpYear = new Date(year,month,date).getFullYear();
+            let tmpMonth = new Date(year, month,date).getMonth();
+            let tmpDate = new Date(year,month,date).getDate();
+            await handleClearEvents({
+              date:tmpDate,
+              year:tmpYear,
+              month:tmpMonth,
+              time:time,
+              room:room,
+            });
+            await eventInsert({
+              date:tmpDate,
+              year:tmpYear,
+              month:tmpMonth,
+              time:time,
+              room:room,
+              event: event,
+              defaultevent:true
+            });
+            year=tmpYear;
+            month=tmpMonth;
+            date=tmpDate;
+          }
+        };
+        runSequential();
       }
     }
     // 모달 ok버튼 눌렀을때
