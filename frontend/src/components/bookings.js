@@ -121,10 +121,10 @@ const Bookings = ({defaultsetting})=>{
       
     };
     // 삭제 버튼을 클릭
-    const onDeleteClick =(e,event,defaultsetting)=>{
+    const onDeleteClick = async (e,event,defaultsetting)=>{
       e.stopPropagation();
       if(!defaultsetting){
-        eventRemove(event.id);
+        await eventRemove(event.id);
       }else {
         const currYear = event.year
         let date = event.date;
@@ -137,7 +137,7 @@ const Bookings = ({defaultsetting})=>{
           let tmpYear = new Date(year,month,date).getFullYear();
           let tmpMonth = new Date(year, month,date).getMonth();
           let tmpDate = new Date(year,month,date).getDate();
-          eventRemoveDefault({
+          await eventRemoveDefault({
             date:tmpDate,
             year:tmpYear,
             month:tmpMonth,
@@ -145,7 +145,7 @@ const Bookings = ({defaultsetting})=>{
             room:room,
             event: eventName,
             defaultevent:true
-          })
+          });
           year=tmpYear;
           month=tmpMonth;
           date=tmpDate+7;
@@ -178,10 +178,10 @@ const Bookings = ({defaultsetting})=>{
       setExclusiveText('');
       setKindergardenText('');
     }
-    // 이벤트 추가 과정 함수 
-    const addEventProcess =(newEvent, defaultsetting)=>{
+    // 이벤트 추가 과정 함수
+    const addEventProcess = async (newEvent, defaultsetting)=>{
       if(!defaultsetting){
-        eventInsert(newEvent);
+        await eventInsert(newEvent);
         resetInputs();
         notification.destroy();
         setConfirmLoading(true);
@@ -195,23 +195,24 @@ const Bookings = ({defaultsetting})=>{
         let room = newEvent.room;
         let event = newEvent.event;
         let time = newEvent.time;
-        handleClearEvents({
-          date,year,month,time,room
-        })
-        eventInsert(newEvent);
+
+        // 순차적으로 clear → insert 처리
+        await handleClearEvents({date,year,month,time,room});
+        await eventInsert(newEvent);
+
         while(year===currYear){
           date+=7;
           let tmpYear = new Date(year,month,date).getFullYear();
           let tmpMonth = new Date(year, month,date).getMonth();
           let tmpDate = new Date(year,month,date).getDate();
-          handleClearEvents({
+          await handleClearEvents({
             date:tmpDate,
             year:tmpYear,
             month:tmpMonth,
             time:time,
             room:room,
           });
-          eventInsert({
+          await eventInsert({
             date:tmpDate,
             year:tmpYear,
             month:tmpMonth,
@@ -219,7 +220,7 @@ const Bookings = ({defaultsetting})=>{
             room:room,
             event: event,
             defaultevent:true
-          })
+          });
           year=tmpYear;
           month=tmpMonth;
           date=tmpDate;
