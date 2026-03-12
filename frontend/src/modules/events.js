@@ -1,6 +1,6 @@
 import {handleActions} from 'redux-actions';
 import createRequestThunk from '../lib/createRequestThunk';
-import { getEvents,postEvents,deleteEvents,removeEvents,clearAllEvents,postEventsBulk,clearAllEventsBulk } from '../lib/api';
+import { getEvents,postEvents,deleteEvents,removeEvents,clearAllEvents,postEventsBulk,clearAllEventsBulk,removeEventsBulk } from '../lib/api';
 let id = 1;
 const INITIATE = 'events/INITIATE';
 const INSERT = 'events/INSERT';
@@ -9,6 +9,7 @@ const REMOVE = 'events/REMOVE';
 const REMOVEDEFAULT = 'events/REMOVEDEFAULT';
 const CLEAREVENTS ='events/CLEAREVENTS';
 const CLEAREVENTSBULK = 'events/CLEAREVENTSBULK';
+const REMOVEDEFAULTBULK = 'events/REMOVEDEFAULTBULK';
 
 export const initiateEvents =createRequestThunk(INITIATE, getEvents);
 
@@ -45,6 +46,19 @@ export const clearEvents = (clearEvent) => async dispatch =>{
     dispatch({
       type: CLEAREVENTS,
       payload: clearEvent
+    })
+  } catch(error){
+    console.log(error);
+    throw error;
+  }
+}
+
+export const removeDefaultBulk = (payload) => async dispatch => {
+  try{
+    await removeEventsBulk(payload)
+    dispatch({
+      type: REMOVEDEFAULTBULK,
+      payload
     })
   } catch(error){
     console.log(error);
@@ -97,6 +111,17 @@ const events = handleActions({
         );
     },
     [REMOVE]: (state,action)=>(state.filter(event=> event.id !== Number(action.payload))),
+    [REMOVEDEFAULTBULK]: (state,action)=>{
+        const { time, room, event, dates } = action.payload;
+        const dateSet = new Set(dates.map(d => `${d.year}-${d.month}-${d.date}`));
+        return state.filter(e =>
+            !(e.time === time &&
+              e.room === room &&
+              e.event === event &&
+              e.defaultevent === true &&
+              dateSet.has(`${e.year}-${e.month}-${e.date}`))
+        );
+    },
     [REMOVEDEFAULT]: (state,action)=>(state.filter(event=>
             event.date !== action.payload.date ||
             event.month !== action.payload.month ||

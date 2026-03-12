@@ -2,7 +2,7 @@ import './bookings.css'
 import React, { useCallback, useState } from 'react';
 import { notification } from 'antd';
 import { useDispatch, useSelector} from 'react-redux';
-import {insert,remove,removeDefault,clearEvents,insertBulk,clearEventsBulk} from "../modules/events";
+import {insert,remove,removeDefault,clearEvents,insertBulk,clearEventsBulk,removeDefaultBulk} from "../modules/events";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import DateBox from './dateBox';
 import ModalInputs from './modalInputs';
@@ -30,6 +30,7 @@ const Bookings = ({defaultsetting})=>{
     const handleClearEvents = useCallback((event)=>dispatch(clearEvents(event)),[dispatch]);
     const handleInsertBulk = useCallback((eventsArr)=>dispatch(insertBulk(eventsArr)),[dispatch]);
     const handleClearEventsBulk = useCallback((event)=>dispatch(clearEventsBulk(event)),[dispatch]);
+    const handleRemoveDefaultBulk = useCallback((payload)=>dispatch(removeDefaultBulk(payload)),[dispatch]);
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [gradeText, setGradeText] = useState('');
@@ -128,30 +129,25 @@ const Bookings = ({defaultsetting})=>{
       if(!defaultsetting){
         await eventRemove(event.id);
       }else {
-        const currYear = event.year
+        const currYear = event.year;
         let date = event.date;
         let year = event.year;
         let month = event.month;
-        let room = event.room;
-        let eventName = event.event;
-        let time = event.time;
-        while(year===currYear){
-          let tmpYear = new Date(year,month,date).getFullYear();
-          let tmpMonth = new Date(year, month,date).getMonth();
-          let tmpDate = new Date(year,month,date).getDate();
-          await eventRemoveDefault({
-            date:tmpDate,
-            year:tmpYear,
-            month:tmpMonth,
-            time:time,
-            room:room,
-            event: eventName,
-            defaultevent:true
-          });
-          year=tmpYear;
-          month=tmpMonth;
-          date=tmpDate+7;
+        const room = event.room;
+        const eventName = event.event;
+        const time = event.time;
+
+        // 삭제할 날짜 목록 생성
+        const dates = [];
+        while(year === currYear){
+          dates.push({ date, month, year });
+          const next = new Date(year, month, date + 7);
+          year = next.getFullYear();
+          month = next.getMonth();
+          date = next.getDate();
         }
+        // 한 번에 bulk 삭제
+        await handleRemoveDefaultBulk({ time, room, event: eventName, dates });
       }
     }
     // 알림창 생성 함수
