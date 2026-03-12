@@ -178,10 +178,19 @@ const Bookings = ({defaultsetting})=>{
       setExclusiveText('');
       setKindergardenText('');
     }
-    // wrapper cover 토글
+    // 전체화면 오버레이 토글
     const setCover = (on) => {
-      const el = document.querySelector('.wrapper');
-      if(el) on ? el.classList.add('cover') : el.classList.remove('cover');
+      const id = 'global-cover-overlay';
+      if(on) {
+        if(document.getElementById(id)) return;
+        const div = document.createElement('div');
+        div.id = id;
+        div.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:#373c4f6a;z-index:1001;';
+        document.body.appendChild(div);
+      } else {
+        const div = document.getElementById(id);
+        if(div) document.body.removeChild(div);
+      }
     };
 
     // 이벤트 추가 과정 함수
