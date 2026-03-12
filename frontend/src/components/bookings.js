@@ -237,6 +237,7 @@ const Bookings = ({defaultsetting})=>{
     }
     // 모달 ok버튼 눌렀을때
     const handleOk = () => {
+      console.log('handleOk called, defaultsetting:', defaultsetting);
       if(gradeText==="" && classText==="" && exclusiveText==="" && kindergardenText==="" ){
         openInputNotification('예약할 내용')
         return;
@@ -254,6 +255,7 @@ const Bookings = ({defaultsetting})=>{
           ...eventSample,
           event: `${gradeText}-${classText}`,
         };
+        console.log('calling addEventProcess with grade-class, defaultsetting:', defaultsetting);
         addEventProcess(newEvent,defaultsetting);
       }
       else if(exclusiveText!==""){
