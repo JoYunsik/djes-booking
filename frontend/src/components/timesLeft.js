@@ -16,6 +16,7 @@ const TimesLeft = ()=> {
             <div className="time-sub">(13:00~13:40)</div>
           </div>
           <div className="time">6교시</div>
+          <div className="time time-afterschool">방과후</div>
         </div>
     )
 }

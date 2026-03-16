@@ -158,6 +158,7 @@ const DataTable = ({events, rooms, onSetSelectedId})=>{
         if (time === 4) return '5교시(12:20~13:00)';
         if (time === 5) return '5교시(13:00~13:40)';
         if (time === 6) return '6교시';
+        if (time === 7) return '방과후';
         return `${time + 1}교시`;
     };
 

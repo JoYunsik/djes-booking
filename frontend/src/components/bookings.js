@@ -316,6 +316,7 @@ const Bookings = ({defaultsetting})=>{
               <DateBox id='4' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
               <DateBox id='5' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
               <DateBox id='6' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
+              <DateBox id='7' idx={idx + 1} onBoxClick={onBoxClick} onDeleteClick={onDeleteClick} weekdata={data} events={events} currRoom={currRoom} defaultsetting={defaultsetting} loadingKeys={loadingKeys}></DateBox>
             </div>
           ))}
           <ModalInputs

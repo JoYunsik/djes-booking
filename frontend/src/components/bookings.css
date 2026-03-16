@@ -35,8 +35,16 @@
     border: 1px dashed;
   } */
 .booking:hover{
-  background-color: #eaf4f8; 
+  background-color: #eaf4f8;
   border: 1px solid rgb(59, 91, 234) ;
+}
+.day-wrapper .booking:nth-child(8){
+  background-color: #ffffff;
+  border: 0.5px solid rgb(196, 196, 196);
+}
+.day-wrapper .booking:nth-child(8):hover{
+  background-color: #eaf4f8;
+  border: 1px solid rgb(59, 91, 234);
 }
 .add-event-wrapper{
   overflow: hidden;
